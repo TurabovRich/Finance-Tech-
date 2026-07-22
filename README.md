@@ -29,7 +29,7 @@ FinanceApp/
 
 | Module | Responsibility |
 |--------|----------------|
-| `auth` | OTP, JWT, PIN setup |
+| `auth` | OTP, JWT access + refresh tokens, sessions, PIN setup |
 | `users` | Profile, locale |
 | `cards` | Linked cards (Humo/Uzcard/Visa) |
 | `transactions` | Transaction feed |
@@ -47,7 +47,6 @@ docker compose up -d db
 cp backend/.env.example backend/.env
 ./scripts/setup-backend.sh
 cd backend && source .venv/bin/activate
-alembic revision --autogenerate -m "initial"
 alembic upgrade head
 uvicorn app.main:app --reload
 ```
@@ -56,6 +55,11 @@ API docs: http://localhost:8000/docs
 Health: http://localhost:8000/health
 
 **Dev OTP code** (until SMS provider is wired): `123456`
+
+**Auth flow:** `POST /auth/otp/request` → `POST /auth/otp/verify` (returns
+`access_token` + `refresh_token`) → `POST /auth/refresh` to renew the access token
+→ `POST /auth/logout` or `POST /auth/sessions/{id}/revoke` to end a session.
+`GET /auth/sessions` lists a user's active sessions/devices.
 
 ### 2. Mobile
 
@@ -66,11 +70,16 @@ cd mobile && flutter run
 
 ### 3. Tests + CI
 
+Tests run against a real Postgres — `docker-compose.yml` provisions a separate
+`clarity_test` database (via `infra/docker/init-test-db.sql`) so `pytest` never
+touches dev data.
+
 ```bash
+docker compose up -d db
 cd backend && pytest
 ```
 
-CI workflow: `.github/workflows/ci.yml`
+CI workflow: `.github/workflows/ci.yml` (spins up its own ephemeral Postgres service)
 
 ---
 
@@ -85,7 +94,8 @@ CI workflow: `.github/workflows/ci.yml`
 
 ## Current milestone
 
-1. First Alembic migration + seed categories/transactions
+1. Seed system categories via migration data (schema exists; seed data doesn't yet)
 2. Wire Flutter Insights home to `/api/v1/insights/monthly`
 3. Real OTP flow (SMS provider integration)
 4. Card linking flow end-to-end
+5. Rate limiting on `/auth/otp/*` (brute-force protection — tracked, not yet implemented)

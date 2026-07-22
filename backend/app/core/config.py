@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     DEBUG: bool = True
 
     DATABASE_URL: str = "postgresql+asyncpg://clarity:clarity_dev@localhost:5432/clarity"
+    # Separate database so the test suite never touches local dev data. Defaults to
+    # the same server as DATABASE_URL with `_test` appended if not set explicitly.
+    TEST_DATABASE_URL: str | None = None
 
     SECRET_KEY: str = "change-me"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30

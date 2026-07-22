@@ -31,8 +31,14 @@ class Transaction(Base):
     category_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("categories.id"), nullable=True
     )
-    type: Mapped[TransactionType] = mapped_column(Enum(TransactionType), nullable=False)
-    status: Mapped[TransactionStatus] = mapped_column(Enum(TransactionStatus), default=TransactionStatus.COMPLETED)
+    type: Mapped[TransactionType] = mapped_column(
+        Enum(TransactionType, values_callable=lambda enum_cls: [e.value for e in enum_cls]),
+        nullable=False,
+    )
+    status: Mapped[TransactionStatus] = mapped_column(
+        Enum(TransactionStatus, values_callable=lambda enum_cls: [e.value for e in enum_cls]),
+        default=TransactionStatus.COMPLETED,
+    )
     amount: Mapped[int] = mapped_column(BigInteger, nullable=False)  # smallest currency unit (tiyin)
     fee: Mapped[int] = mapped_column(BigInteger, default=0)
     currency: Mapped[str] = mapped_column(String(3), default="UZS")

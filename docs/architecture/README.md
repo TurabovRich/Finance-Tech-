@@ -13,16 +13,31 @@
 
 ## Modular monolith
 
-Each domain module owns:
+One process, layered by technical role rather than one folder per domain —
+appropriate at the current team size; see "When to reorganize" below.
 
 ```
-modules/<name>/
-├── router.py      # HTTP layer
-├── service.py     # business logic
-├── repository.py  # database access
-├── models.py      # SQLAlchemy tables
-└── schemas.py     # Pydantic request/response
+backend/app/
+├── api/v1/endpoints/   # HTTP layer (routing, request/response only)
+├── api/v1/schemas/     # Pydantic request/response DTOs
+├── services/           # business logic
+├── db/repositories/    # database access (query construction only)
+├── models/             # SQLAlchemy tables
+└── core/                # config, security, logging, shared FastAPI dependencies
 ```
+
+Request flow: `endpoint → service → repository → model`. Services never talk to each
+other directly; repositories never contain business rules; endpoints never touch
+the database or SQLAlchemy models directly.
+
+### When to reorganize into domain modules
+
+An earlier iteration of this repo used one folder per domain
+(`modules/auth/{router,service,repository,models,schemas}.py`, etc.). It was removed
+because it was a second, unwired implementation sitting next to this one — not
+because domain-first organization is wrong. Revisit domain modules once multiple
+engineers/squads own separate domains and folder-level ownership boundaries start
+to matter more than the current low-friction shared layout.
 
 ## API base path
 

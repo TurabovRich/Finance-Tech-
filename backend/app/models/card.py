@@ -20,7 +20,10 @@ class LinkedCard(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
-    network: Mapped[CardNetwork] = mapped_column(Enum(CardNetwork), nullable=False)
+    network: Mapped[CardNetwork] = mapped_column(
+        Enum(CardNetwork, values_callable=lambda enum_cls: [e.value for e in enum_cls]),
+        nullable=False,
+    )
     last_four: Mapped[str] = mapped_column(String(4), nullable=False)
     bank_name: Mapped[str | None] = mapped_column(String(120), nullable=True)
     nickname: Mapped[str | None] = mapped_column(String(60), nullable=True)
