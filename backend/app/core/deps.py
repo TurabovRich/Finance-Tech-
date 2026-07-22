@@ -2,15 +2,18 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, Header, HTTPException, status
 from jose import JWTError, jwt
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.security import ALGORITHM
-from app.core.deps import DbSession
+from app.db.session import get_db
+
+DbSession = Annotated[AsyncSession, Depends(get_db)]
 
 
-    from fastapi import Header
+async def get_current_user_id(authorization: Annotated[str | None, Header()] = None) -> str:
     if not authorization:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing Authorization header")
     scheme, _, token = authorization.partition(" ")
