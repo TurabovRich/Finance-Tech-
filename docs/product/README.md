@@ -1,22 +1,26 @@
 # Clarity — Product Documentation
 
-Educational fintech simulation for Uzbekistan context. No real payments.
+Real fintech product for Uzbekistan. Insights-first personal finance.
+
+**Start here:** [`VISION.md`](VISION.md)
 
 ## V1 Scope
 
-| In scope | Out of scope |
-|----------|--------------|
-| Simulated auth (OTP) | Real SMS / KYC |
-| Mock card linking | Humo/Uzcard integration |
-| Fake transaction feed | Real money movement |
-| Spending categorization | BNPL, crypto, lending |
-| Monthly insights | Super-app marketplace |
+| In scope | Phase 2+ |
+|----------|----------|
+| Phone OTP auth + PIN | Biometric unlock |
+| Card linking (Humo/Uzcard/Visa) | Direct bank APIs |
+| Transaction feed with categories | Merchant enrichment |
+| Monthly insights dashboard | Budgets & alerts |
+| User custom categories | Family / shared accounts |
 
-## Documents to add here
+## Documents
 
-- `PRD.md` — product requirements
-- `roadmap.md` — V1 / V2 / V3
-- `user-research.md` — interview findings
+| File | Purpose |
+|------|---------|
+| `VISION.md` | North star, positioning, roadmap |
+| `PRD.md` | Detailed requirements *(to write)* |
+| `roadmap.md` | Release milestones *(to write)* |
 
 ## Modules (mirrors backend)
 

@@ -6,6 +6,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -14,11 +16,20 @@ class LoginScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Spacer(),
-              Text('Clarity', style: Theme.of(context).textTheme.headlineLarge),
+              Text('Clarity', style: theme.textTheme.headlineLarge),
               const SizedBox(height: 8),
               Text(
-                'Educational fintech simulation — no real payments.',
-                style: Theme.of(context).textTheme.bodyMedium,
+                'See where your money goes.',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Link your cards. Track spending. Understand every month.',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: 32),
               TextField(
@@ -32,7 +43,7 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => context.go('/home'),
-                child: const Text('Continue (simulated)'),
+                child: const Text('Continue'),
               ),
               const Spacer(),
             ],

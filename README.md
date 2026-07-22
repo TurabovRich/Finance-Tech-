@@ -1,11 +1,17 @@
 # Clarity
 
-Educational fintech simulation — learn how company-scale mobile finance apps are structured, without handling real money.
+Personal finance clarity for Uzbekistan — see where your money goes, built to scale.
 
-**Market context:** Uzbekistan (PayMe, Click, PayNet as reference)  
+**Market:** Uzbekistan (PayMe, Click, PayNet as context — we compete on understanding, not just paying)  
 **Stack:** Flutter · FastAPI · PostgreSQL · Docker · GitHub Actions
 
 ---
+
+## What Clarity is
+
+A real fintech product: link your cards, track spending by category, and open the app to **insights first** — not another payment button.
+
+Product vision: [`docs/product/VISION.md`](docs/product/VISION.md)
 
 ## Project structure
 
@@ -23,10 +29,10 @@ FinanceApp/
 
 | Module | Responsibility |
 |--------|----------------|
-| `auth` | OTP (simulated), JWT, PIN setup |
+| `auth` | OTP, JWT, PIN setup |
 | `users` | Profile, locale |
-| `cards` | Linked mock cards (Humo/Uzcard/Visa) |
-| `transactions` | Simulated transaction feed |
+| `cards` | Linked cards (Humo/Uzcard/Visa) |
+| `transactions` | Transaction feed |
 | `categories` | System + user spending categories |
 | `insights` | Monthly aggregates (computed) |
 
@@ -49,7 +55,7 @@ uvicorn app.main:app --reload
 API docs: http://localhost:8000/docs  
 Health: http://localhost:8000/health
 
-**Simulated OTP code:** `123456`
+**Dev OTP code** (until SMS provider is wired): `123456`
 
 ### 2. Mobile
 
@@ -64,23 +70,22 @@ cd mobile && flutter run
 cd backend && pytest
 ```
 
-CI workflow: `.github/workflows/ci.yml` (copy from `infra/github-actions/ci.yml`)
+CI workflow: `.github/workflows/ci.yml`
 
 ---
 
-## Learning mode rules
+## Engineering rules
 
-1. No real payment rails — all money data is simulated
-2. Document every decision in `docs/`
-3. Wire JWT auth before calling protected endpoints from mobile
-4. Amounts always in **tiyin** (integer) — never float
+1. Amounts always in **tiyin** (integer) — never float
+2. JWT auth on all protected endpoints; mobile uses secure token storage
+3. No raw card numbers — `last_four` display only
+4. Document decisions in `docs/`
 
 ---
 
-## Next steps
+## Current milestone
 
-1. Write `docs/product/PRD.md`
-2. Run first Alembic migration
-3. Seed fake transactions + categories
-4. Wire Flutter screens to API
-5. Add JWT dependency to replace `user_id` placeholders
+1. First Alembic migration + seed categories/transactions
+2. Wire Flutter Insights home to `/api/v1/insights/monthly`
+3. Real OTP flow (SMS provider integration)
+4. Card linking flow end-to-end
